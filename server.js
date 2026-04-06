@@ -1,5 +1,6 @@
 // server.js
-import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
