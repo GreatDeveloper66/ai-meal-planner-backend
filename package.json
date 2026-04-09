@@ -12,11 +12,11 @@
     "node": "20.x"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^latest",
-    "ai": "^latest",
-    "dotenv": "^latest",
-    "express": "^latest",
-    "openai": "^latest"
+    "@ai-sdk/openai": "latest",
+    "ai": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "openai": "latest"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
