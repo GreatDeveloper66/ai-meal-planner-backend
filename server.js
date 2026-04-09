@@ -2,13 +2,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-import OpenAI from 'openai';
 import { testGPT, testDalle } from './controllers/Controllers.js';
 
-// Initialize OpenAI client
-const openaiClient = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 
 const app = express();

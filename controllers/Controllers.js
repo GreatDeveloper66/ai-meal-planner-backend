@@ -1,5 +1,13 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
+import OpenAI from 'openai';
+
+// Initialize OpenAI client
+const openaiClient = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 
 export const testGPT = async (req, res) => {
