@@ -42,3 +42,32 @@ export type DietaryProfile = {
   dietaryPreferences: string[];
   budgetLevel: "low" | "normal" | "high";
 }
+
+export type FoodItem = {
+  id: string;
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  quantity?: string;
+};
+export type Meal = {
+  id: string;
+  name: "breakfast" | "lunch" | "dinner";
+  foods: FoodItem[];
+};
+
+export type MealPlan = {
+  id: string;
+  date: string; // ISO date string
+  meals: Meal[];
+};
+
+type MealImage = {
+  mealImageUrl: string;
+};
+
+export type MealPlanImages = {
+  MealPlanImagesUrls: MealImage[];
+}
