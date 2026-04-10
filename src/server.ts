@@ -15,8 +15,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/api/test-gpt', testGPT);
 app.post('/api/test-dalle', testDalle);
-app.post('/api/meal-plan', getMealPlanFromDietaryProfile);
-app.post('/api/meal-plan-images', getMealPlanImages);
+app.get('/api/meal-plan', getMealPlanFromDietaryProfile);
+app.get('/api/meal-plan-images', getMealPlanImages);
 
 
 app.listen(port, () => {
