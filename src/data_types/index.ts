@@ -1,37 +1,4 @@
-// src/data_types/index.ts
-
-export interface ApiResponse {
-  success: boolean;
-  data?: any;
-  error?: string;
-}
-
-export interface TestGPTRequest {
-  prompt?: string;
-}
-
-export interface TestDalleRequest {
-  prompt?: string;
-}
-
-export interface GPTResponse {
-  text: string;
-}
-
-export interface DalleResponse {
-  imageUrl: string;
-}
-
-// Express type extensions
-import { Request } from 'express';
-
-export interface TypedRequestBody<T> extends Request {
-  body: T;
-}
-
-export interface TypedResponse<T> extends Express.Response {
-  json: (body: T) => this;
-}
+import { Request, Response } from 'express';
 
 export type DietaryProfile = {
   age: number;
@@ -52,6 +19,7 @@ export type FoodItem = {
   fat: number;
   quantity?: string;
 };
+
 export type Meal = {
   id: string;
   name: "breakfast" | "lunch" | "dinner";
@@ -71,3 +39,53 @@ type MealImage = {
 export type MealPlanImages = {
   MealPlanImagesUrls: MealImage[];
 }
+
+export type TestGPTRequestBody = {
+  prompt?: string;
+};
+
+export type TestGPTResponseBody = {
+  text: string;
+} | {
+  error: string;
+};
+
+export type TestDalleRequestBody = {
+  prompt?: string;
+};
+
+export type TestDalleResponseBody = {
+  imageUrl: string;
+} | {
+  error: string;
+};
+
+export type TestGPTRequest = Request<{}, {}, TestGPTRequestBody>;
+export type TestGPTResponse = Response<TestGPTResponseBody>;
+export type TestDalleRequest = Request<{}, {}, TestDalleRequestBody>;
+export type TestDalleResponse = Response<TestDalleResponseBody>;
+
+export type ApiResponse<T = unknown> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
+export type DietaryProfileRequest = Request<{}, {}, DietaryProfile>;
+
+export type MealPlanResponseBody = {
+  mealPlan: MealPlan;
+};
+
+export type MealPlanResponse = Response<MealPlanResponseBody>;
+
+export type MealPlanRequest = Request<{}, {}, MealPlan>;
+
+export type MealPlanImagesResponseBody = {
+  mealPlanImages: MealPlanImages;
+};
+
+export type MealPlanImagesResponse = Response<MealPlanImagesResponseBody>;
+
+
+
