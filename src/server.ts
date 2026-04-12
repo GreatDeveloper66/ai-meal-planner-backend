@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express, { Request, Response } from 'express';
-import { testGPT, testDalle, getMealPlanImages, getMealPlanFromDietaryProfile } from './controllers/Controllers.js'; // Note the .js extension
+import { testGPT, testDalle, getMealPlanImages, getMealPlanFromDietaryProfile } from './controllers/Controllers.js';
 
 const app = express();
 const port = process.env.PORT || 3000;

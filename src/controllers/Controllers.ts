@@ -4,9 +4,9 @@ import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import OpenAI from 'openai';
 import { Request, Response } from 'express';
-import { ApiResponse, TestGPTRequest, TestDalleRequest, TestGPTResponse, TestDalleResponse } from '../data_types/index.js'; // Add .js extension
-import { DietaryProfile, MealPlan, MealPlanImages, Meal, FoodItem } from '../data_types/index.js'; // Add .js extension
-import { generateMealPlan } from '../helpers/helpers.ts'; // Add .js extension
+import { ApiResponse, TestGPTRequest, TestDalleRequest, TestGPTResponse, TestDalleResponse } from '../data_types/index.js';
+import { DietaryProfile, MealPlan, MealPlanImages, Meal, FoodItem } from '../data_types/index.js';
+import { generateMealPlan } from '../helpers/helpers.js'; // Add .js extension
 // Initialize OpenAI client
 const openaiClient = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
