@@ -5,8 +5,8 @@ import { generateText } from 'ai';
 import OpenAI from 'openai';
 import { Request, Response } from 'express';
 import { ApiResponse, TestGPTRequest, TestDalleRequest, TestGPTResponse, TestDalleResponse } from '../data_types/index.js';
-import { DietaryProfile, MealPlan, MealPlanImages, Meal, FoodItem } from '../data_types/index.js';
-import { generateMealPlan } from '../helpers/helpers.js'; // Add .js extension
+import { DietaryProfile, MealPlan, MealPlanImages, MealPlanWithPrice, Meal, FoodItem } from '../data_types/index.js';
+import { generateMealPlan, generateMealPlanWithPrice } from '../helpers/helpers.js'; // Add .js extension
 // Initialize OpenAI client
 const openaiClient = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -188,3 +188,32 @@ export const getMealPlanImages = async (req: Request<{}, {}, MealPlan>, res: Res
 
   res.status(200).json({ success: true, data: mealPlanImages });
 }
+
+export const getMealPlanWithPriceFromDietaryProfile = async (req: Request<{}, {}, DietaryProfile>, res: Response<ApiResponse<MealPlanWithPrice>>): Promise<void> => {
+  if (!isValidDietaryProfile(req.body)) {
+    res.status(400).json({
+      success: false,
+      error: 'Invalid request body. Expected a valid DietaryProfile object.'
+    });
+    return;
+  }
+  const profile = req.body;
+
+  try {
+    const mealPlanWithPrice = await generateMealPlanWithPrice(profile);
+    if (!mealPlanWithPrice || !Array.isArray(mealPlanWithPrice.meals) || mealPlanWithPrice.meals.length === 0) {
+      res.status(404).json({
+        success: false,
+        error: 'No meal plan with price could be generated from the AI response.'
+      });
+      return;
+    }
+    res.status(200).json({ success: true, data: mealPlanWithPrice });
+  } catch (error) {
+    console.error('Meal plan with price generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown server error while generating meal plan with price.'
+    });
+  }
+};

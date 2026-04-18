@@ -1,6 +1,6 @@
 import { generateText } from 'ai';
 import { openai } from '@ai-sdk/openai';
-import { DietaryProfile, MealPlan } from '../data_types';
+import { DietaryProfile, MealPlan, MealPlanWithPrice } from '../data_types';
 
 const extractJsonString = (text: string): string | null => {
   const cleaned = text
@@ -110,6 +110,40 @@ Please put your answer in the following json format:
     } catch (error) {
       console.error('Failed to parse meal plan response:', error, 'raw:', rawText);
       throw new Error('Failed to parse meal plan response');
+    }
+  });
+};
+
+export const generateMealPlanWithPrice = async (profile: DietaryProfile): Promise<MealPlanWithPrice> => {
+  const mealPlan = await generateMealPlan(profile);
+  const pricePrompt = `Given the following meal plan, estimate the total price of the ingredients needed to prepare all the meals. Consider average prices for common ingredients and adjust based on the person's budget level (${profile.budgetLevel}).
+Meal Plan:
+${JSON.stringify(mealPlan)}
+Respond with valid JSON only in the following format:
+{
+  "totalPrice": number
+}`;
+  return await generateText({
+    model: openai('gpt-4o'),
+    prompt: pricePrompt,
+  }).then(response => {
+    const rawText = typeof response.text === 'string' ? response.text : '';
+    const jsonText = extractJsonString(rawText);
+    return jsonText;
+
+  }).then(jsonText => {
+    if (!jsonText) {
+      console.error('Failed to extract price JSON from response:', jsonText);
+      throw new Error('Invalid response format: could not extract JSON');
+    }
+    return jsonText;
+  }).then(jsonText => {
+    try {
+      const priceData: { totalPrice: number } = JSON.parse(jsonText);
+      return { ...mealPlan, totalPrice: priceData.totalPrice };
+    } catch (error) {
+      console.error('Failed to parse price response:', error, 'raw:', jsonText);
+      throw new Error('Failed to parse price response');
     }
   });
 };

@@ -26,10 +26,18 @@ export type Meal = {
   foods: FoodItem[];
 };
 
+export type MealWithPrice = Meal & {
+  price: number;
+};
+
 export type MealPlan = {
   id: string;
   date: string; // ISO date string
   meals: Meal[];
+};
+
+export type MealPlanWithPrice = MealPlan & {
+  totalPrice: number;
 };
 
 type MealImage = {
@@ -80,6 +88,14 @@ export type MealPlanResponseBody = {
 export type MealPlanResponse = Response<MealPlanResponseBody>;
 
 export type MealPlanRequest = Request<{}, {}, MealPlan>;
+export type MealPlanRequestWithPrice = Request<{}, {}, MealPlanWithPrice>;
+
+export type MealPlanWithPriceResponseBody = {
+  mealPlan: MealPlanWithPrice;
+};
+
+export type MealPlanWithPriceResponse = Response<MealPlanWithPriceResponseBody>;
+
 
 export type MealPlanImagesResponseBody = {
   mealPlanImages: MealPlanImages;
