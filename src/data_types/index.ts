@@ -36,8 +36,10 @@ export type MealPlan = {
   meals: Meal[];
 };
 
-export type MealPlanWithPrice = MealPlan & {
-  totalPrice: number;
+export type MealPlanWithPrice = {
+  id: string;
+  date: string; // ISO date string
+  meals: MealWithPrice[];
 };
 
 type MealImage = {

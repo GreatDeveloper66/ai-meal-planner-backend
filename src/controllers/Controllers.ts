@@ -112,6 +112,36 @@ export const getMealPlanFromDietaryProfile = async (req: Request<{}, {}, Dietary
   }
 };
 
+export const getMealPlanWithPriceFromDietaryProfile = async (req: Request<{}, {}, DietaryProfile>, res: Response<ApiResponse<MealPlanWithPrice>>): Promise<void> => {
+  if (!isValidDietaryProfile(req.body)) {
+    res.status(400).json({
+      success: false,
+      error: 'Invalid request body. Expected a valid DietaryProfile object.'
+    });
+    return;
+  } else {
+    const profile = req.body;
+    try {
+      const mealPlanWithPrice = await generateMealPlanWithPrice(profile);
+      if (!mealPlanWithPrice || !Array.isArray(mealPlanWithPrice.meals) || mealPlanWithPrice.meals.length === 0) {
+        res.status(404).json({
+          success: false,
+          error: 'No meal plan with price could be generated from the AI response.'
+        });
+        return;
+      }
+      res.status(200).json({ success: true, data: mealPlanWithPrice });
+    }
+    catch (error) {
+      console.error('Meal plan with price generation error:', error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown server error while generating meal plan with price.'
+      });
+    }
+  }
+};
+
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
 const isFoodItem = (value: unknown): value is FoodItem => {
@@ -189,31 +219,3 @@ export const getMealPlanImages = async (req: Request<{}, {}, MealPlan>, res: Res
   res.status(200).json({ success: true, data: mealPlanImages });
 }
 
-export const getMealPlanWithPriceFromDietaryProfile = async (req: Request<{}, {}, DietaryProfile>, res: Response<ApiResponse<MealPlanWithPrice>>): Promise<void> => {
-  if (!isValidDietaryProfile(req.body)) {
-    res.status(400).json({
-      success: false,
-      error: 'Invalid request body. Expected a valid DietaryProfile object.'
-    });
-    return;
-  }
-  const profile = req.body;
-
-  try {
-    const mealPlanWithPrice = await generateMealPlanWithPrice(profile);
-    if (!mealPlanWithPrice || !Array.isArray(mealPlanWithPrice.meals) || mealPlanWithPrice.meals.length === 0) {
-      res.status(404).json({
-        success: false,
-        error: 'No meal plan with price could be generated from the AI response.'
-      });
-      return;
-    }
-    res.status(200).json({ success: true, data: mealPlanWithPrice });
-  } catch (error) {
-    console.error('Meal plan with price generation error:', error);
-    res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown server error while generating meal plan with price.'
-    });
-  }
-};

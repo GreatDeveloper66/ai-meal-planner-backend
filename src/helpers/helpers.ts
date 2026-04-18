@@ -114,36 +114,89 @@ Please put your answer in the following json format:
   });
 };
 
-export const generateMealPlanWithPrice = async (profile: DietaryProfile): Promise<MealPlanWithPrice> => {
-  const mealPlan = await generateMealPlan(profile);
-  const pricePrompt = `Given the following meal plan, estimate the total price of the ingredients needed to prepare all the meals. Consider average prices for common ingredients and adjust based on the person's budget level (${profile.budgetLevel}).
-Meal Plan:
-${JSON.stringify(mealPlan)}
-Respond with valid JSON only in the following format:
+//create helper function that gets meal plan with price from dietary profile. It should return 7 breakfast meals, 7 lunch meals and 7 dinner meals all in the format of the MealPlanWithPrice type. The prompt should be similar to the one in generateMealPlan but it should also include the price of each meal and the total price of the meal plan. The response should be in the following json format:
+/*
 {
+  "id": "string",
+  "date": "string",
+  "meals": [
+    {
+      "id": "string",
+      "name": "breakfast" | "lunch" | "dinner",
+      "foods": [
+        {
+          "id": "string",
+          "name": "string",
+          "calories": number,
+          "protein": number,
+          "carbs": number,
+          "fat": number,
+          "quantity": "string"
+        }
+      ],
+      "price": number
+    }
+  ],
+  "totalPrice": number
+}
+*/
+export const generateMealPlanWithPrice = async (profile: DietaryProfile): Promise<MealPlanWithPrice> => {
+  const prompt = `Generate a meal plan with price for a person with the following dietary profile:
+  Age: ${profile.age},
+  Sex: ${profile.sex},
+  Weight: ${profile.weight} kg,
+  Height: ${profile.height} cm,
+  Activity Level: ${profile.activityLevel},
+  Dietary Preferences: ${profile.dietaryPreferences.join(', ')},
+  Budget Level: ${profile.budgetLevel}.
+Respond with valid JSON only. Do not include any explanation, markdown, or text outside the JSON object.
+The meal plan should meet the person's dietary needs and preferences while staying within their calorie and financial budget.
+Please return 7 breakfast meals, 7 lunch meals and 7 dinner meals. The response should be in the following json format:
+Please put your answer in the following json format:
+{
+  "id": "string",
+  "date": "string",
+  "meals": [
+    {
+      "id": "string",
+      "name": "breakfast" | "lunch" | "dinner",
+      "foods": [
+        {
+          "id": "string",
+          "name": "string",
+          "calories": number,
+          "protein": number,
+          "carbs": number,
+          "fat": number,
+          "quantity": "string"
+        }
+      ],
+      "price": number
+    }
+  ],
   "totalPrice": number
 }`;
   return await generateText({
     model: openai('gpt-4o'),
-    prompt: pricePrompt,
+    prompt: prompt,
   }).then(response => {
     const rawText = typeof response.text === 'string' ? response.text : '';
     const jsonText = extractJsonString(rawText);
-    return jsonText;
 
-  }).then(jsonText => {
     if (!jsonText) {
-      console.error('Failed to extract price JSON from response:', jsonText);
+      console.error('Failed to extract meal plan JSON from response:', rawText);
       throw new Error('Invalid response format: could not extract JSON');
     }
-    return jsonText;
-  }).then(jsonText => {
+
     try {
-      const priceData: { totalPrice: number } = JSON.parse(jsonText);
-      return { ...mealPlan, totalPrice: priceData.totalPrice };
+      const mealPlanWithPrice: MealPlanWithPrice = JSON.parse(jsonText);
+      return mealPlanWithPrice;
     } catch (error) {
-      console.error('Failed to parse price response:', error, 'raw:', jsonText);
-      throw new Error('Failed to parse price response');
+      console.error('Failed to parse meal plan response:', error, 'raw:', rawText);
+      throw new Error('Failed to parse meal plan response');
     }
   });
+
 };
+
+
