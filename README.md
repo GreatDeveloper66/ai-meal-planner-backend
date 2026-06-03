@@ -32,7 +32,7 @@ This service receives a user's dietary profile and generates a fully structured 
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/meal-plan` | Generate a meal plan from a user diet profile |
+| POST | `/meal-plan/generate` | Generate a meal plan from a user diet profile |
 
 ---
 
