@@ -32,8 +32,19 @@ This service receives a user's dietary profile and generates a fully structured 
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/meal-plan/generate` | Generate a meal plan from a user diet profile |
+| POST | `/api/test-gpt` | Test GPT route |
+| POST | `/api/test-dalle` | Test Dalle route |
+| POST | `/api/meal-plan` | Call OpenAI to get comprehensive meal plan based on nutritional profile |
+| POST | `/api/meal-plan-images` | Call OpenAI to get AI images for each meal in meal plan |
+| POST | `/api/meal-plan-with-price` | Call OpenAI to get AI meal plan with prices |
 
+
+
+app.post('/api/test-gpt', testGPT);
+app.post('/api/test-dalle', testDalle);
+app.post('/api/meal-plan', getMealPlanFromDietaryProfile);
+app.post('/api/meal-plan-images', getMealPlanImages);
+app.post('/api/meal-plan-with-price'
 ---
 
 ## Meal Plan Response Schema
