@@ -88,6 +88,7 @@ JWT_SECRET=your_jwt_secret
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js v18+
 - OpenAI API key
 
@@ -119,7 +120,7 @@ npm start
 This service is one of six components in the Meal Plan & Grocery Discovery application:
 
 | Service | Responsibility |
-|---------|---------------|
+| --------- | --------------- |
 | user-auth-service | Authentication & JWT management |
 | meal-plan-diet-profile-service | Diet profile storage & management |
 | **ai-meal-planner-backend** | AI-powered meal plan generation |
