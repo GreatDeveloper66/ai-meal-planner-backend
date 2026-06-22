@@ -128,3 +128,7 @@ This service is one of six components in the Meal Plan & Grocery Discovery appli
 | meal-plan-grocery-service | Grocery store discovery via Google API |
 | meal-plan-frontend | React frontend |
 | meal-planner-backend-for-frontend | BFF orchestration layer |
+
+## LICENSE
+
+MIT LICENSE
