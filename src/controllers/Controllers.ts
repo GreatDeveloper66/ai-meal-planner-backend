@@ -209,17 +209,19 @@ export const getMealPlanImages = async (req: Request<{}, {}, MealPlan>, res: Res
       if (imageUrl) {
         if(!isImageUrlCorrectFormat(imageUrl)){
           console.error(`Failed to generate image for meal ${meal.name}: URL is not in the correct format`);
+          res.status(500).json({ success: false, error: `Failed to generate image for meal ${meal.name}: URL is not in the correct format` });
         } else {
           mealPlanImages.MealPlanImagesUrls.push({
           mealImageUrl: imageUrl
         });
         }
-        
       } else {
         console.error(`Failed to generate image for meal ${meal.name}: no URL returned`);
+        res.status(500).json({ success: false, error: `Failed to generate image for meal ${meal.name}: no URL returned` });
       }
     } catch (error) {
       console.error(`Failed to generate image for meal ${meal.name}:`, error);
+      res.status(500).json({ success: false, error: `Failed to generate image for meal ${meal.name}: ${error instanceof Error ? error.message : 'Unknown error occurred'}` });
     }
   }
 
