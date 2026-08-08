@@ -177,6 +177,8 @@ const isMealPlan = (value: unknown): value is MealPlan => {
   );
 };
 
+const isImageUrlCorrectFormat = (value: unknown): value is string => typeof value === 'string' && value.startsWith('https://') && value.endsWith('.jpg');
+
 export const getMealPlanImages = async (req: Request<{}, {}, MealPlan>, res: Response<ApiResponse<MealPlanImages>>): Promise<void> => {
   const mealPlan = req.body;
 
@@ -205,9 +207,14 @@ export const getMealPlanImages = async (req: Request<{}, {}, MealPlan>, res: Res
       });
       const imageUrl = response.data?.[0]?.url;
       if (imageUrl) {
-        mealPlanImages.MealPlanImagesUrls.push({
+        if(!isImageUrlCorrectFormat(imageUrl)){
+          console.error(`Failed to generate image for meal ${meal.name}: URL is not in the correct format`);
+        } else {
+          mealPlanImages.MealPlanImagesUrls.push({
           mealImageUrl: imageUrl
         });
+        }
+        
       } else {
         console.error(`Failed to generate image for meal ${meal.name}: no URL returned`);
       }
